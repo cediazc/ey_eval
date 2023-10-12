@@ -4,6 +4,7 @@ import com.eval.cediaz.evaljava.domain.PhoneDomain;
 import com.eval.cediaz.evaljava.domain.UserDomain;
 import com.eval.cediaz.evaljava.entity.Phone;
 import com.eval.cediaz.evaljava.entity.User;
+import com.eval.cediaz.evaljava.exception.UserException;
 import com.eval.cediaz.evaljava.repository.PhoneRepository;
 import com.eval.cediaz.evaljava.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class UserServiceImplTest {
 
+    public static final String SECRET = "5d8cf81e187b792d80f08b4dc5a4f5157f889170a8eed2f1b5b8c64ca58e89dc";
     @InjectMocks
     UserServiceImpl userService;
     @Mock
@@ -36,6 +39,46 @@ public class UserServiceImplTest {
 
     @Mock
     PhoneRepository phoneRepository;
+
+    @Test
+    void whenRegisterUser_thenUserExceptionIsThrown() throws IOException {
+        UserDomain userDomain = buildUserDomain();
+        ReflectionTestUtils.setField(userService, "secretKey" , SECRET);
+
+        when(userRepository.findByEmail(any())).thenThrow(new UserException("error"));
+
+        assertThrows(UserException.class, () -> userService.registerUser(userDomain));
+    }
+
+    @Test
+    void whenRegisterUser_withUserError_thenIllegalArgumentExceptionIsThrown() throws IOException {
+        UserDomain userDomain = buildUserDomain();
+        ReflectionTestUtils.setField(userService, "secretKey" , SECRET);
+
+        when(userRepository.findByEmail(any())).thenReturn(null);
+
+        completeUserInfo(userDomain);
+
+        when(userRepository.save(any(User.class))).thenThrow(new IllegalArgumentException());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(userDomain));
+    }
+
+    @Test
+    void whenRegisterUser_withPhoneError_thenIllegalArgumentExceptionIsThrown() throws IOException {
+        UserDomain userDomain = buildUserDomain();
+        ReflectionTestUtils.setField(userService, "secretKey" , SECRET);
+
+        when(userRepository.findByEmail(any())).thenReturn(null);
+
+        completeUserInfo(userDomain);
+        User userEntity = getUserEntity(userDomain);
+
+        when(userRepository.save(any(User.class))).thenReturn(userEntity);
+        when(phoneRepository.saveAll(anyList())).thenThrow(new IllegalArgumentException());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(userDomain));
+    }
 
     @Test
     void whenRegisterUser_thenRetursUserDomain() throws IOException {
