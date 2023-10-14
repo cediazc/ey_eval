@@ -26,19 +26,12 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
-
     @PostMapping("/")
     public ResponseEntity<UserDomain> createUser(@Valid @NotNull(message = "Debe ingresar el body de la request")
                                                      @RequestBody UserDomain userDomain) throws RuntimeException {
 
         userService.registerUser(userDomain);
-        System.out.println("despues " + userDomain);
         return ResponseEntity.ok(userDomain);
     }
 
-    @PutMapping("/{id}")
-    public String modifyUser(@RequestBody UserDomain userDomain) {
-        return null;
-    }
 }
