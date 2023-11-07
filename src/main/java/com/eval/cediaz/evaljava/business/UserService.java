@@ -11,4 +11,6 @@ public interface UserService {
     UserDomain getByEmail(String email);
 
     void deleteByUUID(String uuid);
+
+    UserDomain updateUser(UserDomain userDomain);
 }

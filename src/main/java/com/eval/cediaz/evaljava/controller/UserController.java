@@ -40,8 +40,13 @@ public class UserController {
         userService.deleteByUUID(uuid);
     }
 
-    /*TODO: Crear métodos:
-     - PUT/updateUser
-     */
+    @PutMapping("/uuid")
+    public ResponseEntity<UserDomain> updateUser(@RequestParam String uuid,
+                                                 @Valid @NotNull(message = "Debe ingresar el body de la request")
+                                                 @RequestBody UserDomain userDomain) throws RuntimeException {
 
+        userDomain.setId(uuid);
+        userService.updateUser(userDomain);
+        return ResponseEntity.ok(userDomain);
+    }
 }

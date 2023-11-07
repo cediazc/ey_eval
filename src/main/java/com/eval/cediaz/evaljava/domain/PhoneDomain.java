@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class PhoneDomain {
 
+    private Long id;
     private Integer number;
     private Integer cityCode;
     private Integer countryCode;
@@ -11,10 +12,19 @@ public class PhoneDomain {
     public PhoneDomain() {
     }
 
-    public PhoneDomain(Integer number, Integer cityCode, Integer countryCode) {
+    public PhoneDomain(Long id, Integer number, Integer cityCode, Integer countryCode) {
+        this.id = id;
         this.number = number;
         this.cityCode = cityCode;
         this.countryCode = countryCode;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getNumber() {
@@ -45,19 +55,20 @@ public class PhoneDomain {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PhoneDomain phoneDomain = (PhoneDomain) o;
-        return Objects.equals(number, phoneDomain.number) && Objects.equals(cityCode, phoneDomain.cityCode) && Objects.equals(countryCode, phoneDomain.countryCode);
+        PhoneDomain that = (PhoneDomain) o;
+        return Objects.equals(id, that.id) && Objects.equals(number, that.number) && Objects.equals(cityCode, that.cityCode) && Objects.equals(countryCode, that.countryCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, cityCode, countryCode);
+        return Objects.hash(id, number, cityCode, countryCode);
     }
 
     @Override
     public String toString() {
-        return "Phone{" +
-                "number=" + number +
+        return "PhoneDomain{" +
+                "id=" + id +
+                ", number=" + number +
                 ", cityCode=" + cityCode +
                 ", countryCode=" + countryCode +
                 '}';

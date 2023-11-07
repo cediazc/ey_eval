@@ -35,12 +35,16 @@ public class UserMapperServiceImpl implements UserMapperService {
 
     private void completeUserInfo(UserDomain userDomain) {
         // Se procede a transformar para guardar
-        userDomain.setId(UUID.randomUUID().toString());
+        if(userDomain.getId() == null){
+            userDomain.setId(UUID.randomUUID().toString());
+        }
         userDomain.setToken(getToken(userDomain.getEmail()));
         userDomain.setCreated(new Date());
         userDomain.setLastModified(new Date());
         userDomain.setLastLogin(null);
-        userDomain.setActive(isActive);
+        if(userDomain.getActive() == null) {
+            userDomain.setActive(isActive);
+        }
     }
 
     private User getUserEntity(UserDomain userDomain) {
@@ -89,6 +93,9 @@ public class UserMapperServiceImpl implements UserMapperService {
     private Phone getPhoneEntity(PhoneDomain phoneDomain, User userEntity){
         Phone phoneEntity = new Phone();
 
+        if(phoneDomain.getId() != null) {
+            phoneEntity.setId(phoneDomain.getId());
+        }
         phoneEntity.setUser(userEntity);
         phoneEntity.setCityCode(phoneDomain.getCityCode());
         phoneEntity.setCountryCode(phoneDomain.getCountryCode());

@@ -42,12 +42,10 @@ public class UserServiceImpl implements UserService {
 
             // Se guarda el listado de Phones
             phoneRepository.saveAll(userEntity.getPhones());
-
+            return userDomain;
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Error al insertar en la BD");
         }
-
-        return userDomain;
     }
 
     @Override
@@ -83,6 +81,27 @@ public class UserServiceImpl implements UserService {
 
         phoneRepository.deleteAll(user.getPhones());
         userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDomain updateUser(UserDomain userDomain) {
+
+        try {
+            User userEntity = userRepository.findById(userDomain.getId());
+            userEntity = userMapperService.createUserEntityFromDomain(userDomain);
+
+            // Se guarda el User
+            userRepository.save(userEntity);
+
+            // Se guarda el listado de Phones
+            phoneRepository.saveAll(userEntity.getPhones());
+
+            return userDomain;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error al actualizar en la BD");
+        }
+
     }
 
 
