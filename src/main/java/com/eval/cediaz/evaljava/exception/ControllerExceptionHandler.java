@@ -55,4 +55,14 @@ public class ControllerExceptionHandler {
         error.getErrors().add(new ErrorMessage("Any", e.getMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    ResponseEntity<ValidationErrorResponse> onUserNotFoundException(
+            UserNotFoundException e) {
+        ValidationErrorResponse error = new ValidationErrorResponse();
+        error.getErrors().add(new ErrorMessage("Any", e.getErrorMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 }

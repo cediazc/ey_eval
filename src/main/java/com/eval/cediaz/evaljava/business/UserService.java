@@ -7,4 +7,8 @@ import com.eval.cediaz.evaljava.exception.UserException;
 public interface UserService {
 
     public abstract UserDomain registerUser(UserDomain userDomain);
+
+    UserDomain getByUUID(String uuid);
+
+    UserDomain getByEmail(String email);
 }

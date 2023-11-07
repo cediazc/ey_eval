@@ -2,15 +2,13 @@ package com.eval.cediaz.evaljava.controller;
 
 import com.eval.cediaz.evaljava.business.UserService;
 import com.eval.cediaz.evaljava.domain.UserDomain;
+import com.eval.cediaz.evaljava.entity.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/user")
@@ -27,5 +25,20 @@ public class UserController {
         userService.registerUser(userDomain);
         return ResponseEntity.ok(userDomain);
     }
+
+    @GetMapping("/uuid")
+    public ResponseEntity<UserDomain> getUserByUUID(@RequestParam String uuid) {
+        return ResponseEntity.ok(userService.getByUUID(uuid));
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<UserDomain> getUserByMail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getByEmail(email));
+    }
+
+    /*TODO: Crear métodos:
+     - PUT/updateUser
+     - DELETE/deleteByUuid
+     */
 
 }
