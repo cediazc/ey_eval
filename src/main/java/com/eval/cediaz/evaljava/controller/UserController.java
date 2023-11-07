@@ -2,7 +2,6 @@ package com.eval.cediaz.evaljava.controller;
 
 import com.eval.cediaz.evaljava.business.UserService;
 import com.eval.cediaz.evaljava.domain.UserDomain;
-import com.eval.cediaz.evaljava.entity.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
+    @DeleteMapping("/uuid")
+    public void deleteUserByUUID(@RequestParam String uuid) {
+        userService.deleteByUUID(uuid);
+    }
+
     /*TODO: Crear métodos:
      - PUT/updateUser
-     - DELETE/deleteByUuid
      */
 
 }

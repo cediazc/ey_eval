@@ -1,24 +1,15 @@
 package com.eval.cediaz.evaljava.business;
 
-import com.eval.cediaz.evaljava.domain.PhoneDomain;
 import com.eval.cediaz.evaljava.domain.UserDomain;
-import com.eval.cediaz.evaljava.entity.Phone;
 import com.eval.cediaz.evaljava.entity.User;
 import com.eval.cediaz.evaljava.exception.UserException;
 import com.eval.cediaz.evaljava.exception.UserNotFoundException;
 import com.eval.cediaz.evaljava.mapper.UserMapperService;
 import com.eval.cediaz.evaljava.repository.PhoneRepository;
 import com.eval.cediaz.evaljava.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -79,6 +70,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapperService.createUserDomainFromEntity(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByUUID(String uuid) {
+        User user = userRepository.findById(uuid);
+
+        if(user == null){
+            throw new UserNotFoundException("Email no existe en la BD");
+        }
+
+        phoneRepository.deleteAll(user.getPhones());
+        userRepository.delete(user);
     }
 
 
